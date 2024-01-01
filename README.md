@@ -1,3 +1,3 @@
 ### Simply Hired
 
-> A small backend project written in Golang and GORM
+> A small backend project written in Golang, GIN framework and GORM
