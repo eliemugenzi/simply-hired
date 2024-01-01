@@ -41,7 +41,7 @@ func (service *jwtService) getTokenClaims(userId interface{}, expiryDays int) *j
 
 func (service *jwtService) GenerateTokenPair(userId interface{}) map[string] string {
 	tokenClaims := service.getTokenClaims(userId, 15)
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, tokenClaims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims)
 	tokenString, err := token.SignedString([]byte(service.secretKey))
 
 	if err != nil {
@@ -49,8 +49,8 @@ func (service *jwtService) GenerateTokenPair(userId interface{}) map[string] str
 	}
 
 	refreshTokenClaims := service.getTokenClaims(userId, 30)
-	refreshToken := jwt.NewWithClaims(jwt.SigningMethodES256, refreshTokenClaims)
-	refreshTokenString, err := refreshToken.SignedString([] byte(service.secretKey))
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshTokenClaims)
+	refreshTokenString, err := refreshToken.SignedString([]byte(service.secretKey))
 
 	if err != nil {
 		panic(err)

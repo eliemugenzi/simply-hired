@@ -71,6 +71,23 @@ func (controller * authController) Register(context *gin.Context) {
 		return
 	}
 
+	existingUser := controller.authService.FindUserByEmail(userDto.Email)
+
+	if existingUser.ID != 0 {
+       context.JSON(
+		http.StatusConflict,
+		utils.GetResponse(
+			http.StatusConflict,
+			"A user with this email already exists",
+			nil,
+		),
+	   )
+
+	   controller.logger.Error().Msg("A user with this email already exists")
+
+	   return
+	}
+
 	result, user := controller.authService.Register(userDto)
 
 	if result.Error != nil {

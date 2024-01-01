@@ -12,6 +12,7 @@ import (
 type AuthService interface {
 	Register(userDto dto.User) (*gorm.DB, models.User)
 	VerifyCredential(email string, password string) (bool, uint64)
+	FindUserByEmail(email string) models.User
 }
 
 type authService struct {
@@ -40,6 +41,12 @@ func (service *authService) VerifyCredential(email string, password string) (boo
    }
 
    return false, 0
+}
+
+func (service *authService) FindUserByEmail(email string) models.User{
+    _, user := service.authRepo.FindByEmail(email)
+	return user
+	
 }
 
 

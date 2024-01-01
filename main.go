@@ -4,9 +4,12 @@ import (
 	"os"
 
 	"github.com/eliemugenzi/simply-hired/db/config"
+	"github.com/eliemugenzi/simply-hired/middleware"
 	"github.com/eliemugenzi/simply-hired/route"
 	"github.com/eliemugenzi/simply-hired/utils/logger"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"github.com/rs/zerolog"
 	"gorm.io/gorm"
 )
 
@@ -19,10 +22,16 @@ var db *gorm.DB = config.Configure()
 
 
 func main() {
+
+	godotenv.Load()
 	defer config.CloseConnection(db)
 	logger := logger.NewLogger()
 
 	router := gin.Default()
+
+	zLogger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+
+	router.Use(middleware.RequestLogger(&zLogger))
 
 	route.RootRoute(db, router, logger)
 
