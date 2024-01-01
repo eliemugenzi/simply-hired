@@ -6,6 +6,7 @@ import (
 	"github.com/eliemugenzi/simply-hired/db/config"
 	"github.com/eliemugenzi/simply-hired/middleware"
 	"github.com/eliemugenzi/simply-hired/route"
+	"github.com/eliemugenzi/simply-hired/utils"
 	"github.com/eliemugenzi/simply-hired/utils/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -34,6 +35,8 @@ func main() {
 	router.Use(middleware.RequestLogger(&zLogger))
 
 	route.RootRoute(db, router, logger)
+
+	utils.InitializeCustomValidations()
 
 	router.GET("/", func(ctx *gin.Context) {
 

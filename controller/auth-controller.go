@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/eliemugenzi/simply-hired/db/models"
 	"github.com/eliemugenzi/simply-hired/dto"
 	service "github.com/eliemugenzi/simply-hired/services"
 	"github.com/eliemugenzi/simply-hired/utils"
@@ -96,7 +97,21 @@ func (controller * authController) Register(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusCreated, utils.GetResponse(http.StatusCreated, "A user has been successfully created", user))
+	newUser := &models.User{
+		ID: user.ID,
+		FirstName: user.FirstName,
+		LastName: user.LastName,
+		Email: user.Email,
+		Role: user.Role,
+	}
+
+	context.JSON(
+		http.StatusCreated,
+		 utils.GetResponse(
+			http.StatusCreated,
+			 "A user has been successfully created",
+	    newUser),
+	)
 }
 
 func (controller *authController) VerifyToken(context *gin.Context) {
