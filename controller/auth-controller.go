@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/eliemugenzi/simply-hired/db/models"
 	"github.com/eliemugenzi/simply-hired/dto"
+	"github.com/eliemugenzi/simply-hired/serializer"
 	service "github.com/eliemugenzi/simply-hired/services"
 	"github.com/eliemugenzi/simply-hired/utils"
 	"github.com/eliemugenzi/simply-hired/utils/logger"
@@ -97,12 +97,8 @@ func (controller * authController) Register(context *gin.Context) {
 		return
 	}
 
-	newUser := &models.User{
-		ID: user.ID,
-		FirstName: user.FirstName,
-		LastName: user.LastName,
-		Email: user.Email,
-		Role: user.Role,
+	userSerializer := serializer.UserSerializer{
+		User: user,
 	}
 
 	context.JSON(
@@ -110,7 +106,7 @@ func (controller * authController) Register(context *gin.Context) {
 		 utils.GetResponse(
 			http.StatusCreated,
 			 "A user has been successfully created",
-	    newUser),
+	    userSerializer.Response()),
 	)
 }
 
