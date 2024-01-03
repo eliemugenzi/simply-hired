@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -9,6 +11,7 @@ import (
 type AuthRepo interface {
 	Register(user models.User) (*gorm.DB, models.User)
 	FindByEmail(email string) (*gorm.DB, models.User)
+	FindById(id uint) (*gorm.DB, models.User)
 }
 
 type authRepo struct {
@@ -31,6 +34,14 @@ func (repo *authRepo) Register(user models.User) (*gorm.DB, models.User) {
 func (repo *authRepo) FindByEmail(email string) (*gorm.DB, models.User) {
 	user := models.User{}
 	userResult := repo.db.Where("email = ?", email).Take(&user)
+	fmt.Println("EMAIL BY USER", user)
+	return userResult, user
+}
+
+func (repo *authRepo) FindById(id uint) (*gorm.DB, models.User) {
+	user := models.User{}
+	userResult := repo.db.Where("id = ?", id).Take(&user)
+
 	return userResult, user
 }
 

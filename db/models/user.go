@@ -1,7 +1,8 @@
 package models
 
 import (
-	"gorm.io/gorm"
+	"time"
+
 )
 
 
@@ -16,13 +17,12 @@ const (
 
 
 type User struct {
-	gorm.Model
+	ID uint `gorm:"primaryKey,autoIncrement" json:"id"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	Role string `json:"role"`
-
-	// The user association with the application
-	Application Application
 }

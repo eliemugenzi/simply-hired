@@ -45,7 +45,7 @@ func Configure() (*gorm.DB) {
 		return DB
 	}
 
-	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.User{}, &models.Job{}, &models.Application{})
 
 	return DB
 }
