@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"gorm.io/gorm"
@@ -22,7 +21,6 @@ func NewJobRepo(db *gorm.DB) *jobRepo {
 }
 
 func (repo *jobRepo) SaveJob(job models.Job) (*gorm.DB, models.Job) {
-	fmt.Println("JOB DATA", job)
     jobResult := repo.db.Create(&job)
 	return jobResult, job
 }

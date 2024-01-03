@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eliemugenzi/simply-hired/dto"
+	"github.com/eliemugenzi/simply-hired/serializer"
 	service "github.com/eliemugenzi/simply-hired/services"
 	"github.com/eliemugenzi/simply-hired/utils"
 	"github.com/eliemugenzi/simply-hired/utils/logger"
@@ -42,6 +43,9 @@ func (controller *jobController) SaveJob(context *gin.Context) {
 	}
 
 	_, job := controller.jobService.SaveJob(jobDto, userId.(uint))
+	jobSerializer := serializer.JobSerializer{
+		Job: job,
+	}
 
-	context.JSON(http.StatusCreated, utils.GetResponse(http.StatusCreated, "A new job has been created",job ))
+	context.JSON(http.StatusCreated, utils.GetResponse(http.StatusCreated, "A new job has been created",jobSerializer.Response() ))
 }

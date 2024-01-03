@@ -10,6 +10,8 @@ type Job struct {
 	ID uint `gorm:"primaryKey;autoIncrement" json:"id"`
 	Title string `json:"title"`
 	Description string `json:"description"`
+	MinimumSalary uint64 `json:"min_salary"`
+	MaximumSalary uint64 `json:"max_salary"`
 	ApplicationDeadline time.Time `json:"application_deadline"`
 	Status string `json:"status"` // OPEN, CLOSED
 

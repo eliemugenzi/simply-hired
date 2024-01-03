@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"golang.org/x/crypto/bcrypt"
@@ -34,7 +33,6 @@ func (repo *authRepo) Register(user models.User) (*gorm.DB, models.User) {
 func (repo *authRepo) FindByEmail(email string) (*gorm.DB, models.User) {
 	user := models.User{}
 	userResult := repo.db.Where("email = ?", email).Take(&user)
-	fmt.Println("EMAIL BY USER", user)
 	return userResult, user
 }
 

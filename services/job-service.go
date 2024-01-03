@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"github.com/eliemugenzi/simply-hired/dto"
@@ -29,7 +28,6 @@ func NewJobService(jobRepo repository.JobRepo, authRepo repository.AuthRepo) *jo
 func (service *jobService) SaveJob(jobDto dto.Job, userId uint) (*gorm.DB, models.Job) {
 	jobModel := models.Job{}
 	mapped := smapping.MapFields(&jobDto)
-	fmt.Println("MAPPED___", userId)
 
 	err := smapping.FillStruct(&jobModel, mapped)
 
