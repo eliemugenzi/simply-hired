@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/eliemugenzi/simply-hired/dto"
 	"github.com/eliemugenzi/simply-hired/serializer"
@@ -13,6 +14,8 @@ import (
 
 type JobController interface {
 	SaveJob(context *gin.Context)
+	GetMyJobs(context *gin.Context)
+	GetSingleJob(context *gin.Context)
 }
 
 type jobController struct {
@@ -48,4 +51,54 @@ func (controller *jobController) SaveJob(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusCreated, utils.GetResponse(http.StatusCreated, "A new job has been created",jobSerializer.Response() ))
+}
+
+func (controller *jobController) GetMyJobs(context *gin.Context) {
+	userId, _ := context.Get("user_id")
+
+	_, jobs := controller.jobService.FindJobsByRecruiter(userId.(uint))
+
+	jobsSerializer := serializer.JobsSerializer {
+		Jobs: jobs,
+	}
+
+	context.JSON(
+		http.StatusOK,
+		utils.GetResponse(
+			http.StatusOK,
+			"Jobs retrieved",
+			jobsSerializer.Response(),
+		),
+	)
+}
+
+func (controller *jobController) GetSingleJob(context *gin.Context) {
+	jobId := context.Param("id")
+
+	jobIdD, _ := strconv.ParseUint(jobId, 10, 12)
+
+	_, job := controller.jobService.GetSingleJob(uint(jobIdD))
+
+	if job.ID == 0 {
+		context.JSON(
+			http.StatusNotFound,
+			utils.GetResponse(http.StatusNotFound, "Job not found", nil),
+		)
+
+		return
+	}
+
+	jobSerializer := serializer.JobSerializer {
+		Job: job,
+	}
+
+	context.JSON(
+		http.StatusOK,
+		utils.GetResponse(
+			http.StatusOK,
+			"Job found",
+			jobSerializer.Response(),
+		),
+	)
+
 }

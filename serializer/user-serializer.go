@@ -1,6 +1,9 @@
 package serializer
 
-import "github.com/eliemugenzi/simply-hired/db/models"
+import (
+
+	"github.com/eliemugenzi/simply-hired/db/models"
+)
 
 type UserResponse struct {
 	ID uint `json:"id"`

@@ -17,6 +17,6 @@ type Job struct {
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	UserId uint `json:"-"`
+	UserId uint `json:"user_id"`
 	User User `json:"user,omitempty" gorm:"foreignKey:UserId;references:ID"`
 }

@@ -11,6 +11,8 @@ import (
 
 type JobService interface {
 	SaveJob(jobDto dto.Job, userId uint) (*gorm.DB, models.Job)
+	FindJobsByRecruiter(userId uint) (*gorm.DB, []models.Job)
+	GetSingleJob(jobId uint) (*gorm.DB, models.Job)
 }
 
 type jobService struct {
@@ -42,4 +44,16 @@ func (service *jobService) SaveJob(jobDto dto.Job, userId uint) (*gorm.DB, model
 
 	return service.jobRepo.SaveJob(jobModel)
 	
+}
+
+func (service *jobService) FindJobsByRecruiter(userId uint) (*gorm.DB, []models.Job) {
+	result, jobs := service.jobRepo.FindJobsByRecruiter(userId)
+
+	return result, jobs
+}
+
+func (service *jobService) GetSingleJob(jobId uint) (*gorm.DB, models.Job) {
+	result, job := service.jobRepo.GetSingleJob(jobId)
+
+	return result, job
 }

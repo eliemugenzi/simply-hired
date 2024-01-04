@@ -21,4 +21,6 @@ func JobRoute(db *gorm.DB, jobRouter *gin.RouterGroup, logger *logger.Logger) {
 	)
 
 	jobRouter.POST("/", roleMiddleware.AuthorizeRole("HR"), jobController.SaveJob)
+	jobRouter.GET("/myjobs", roleMiddleware.AuthorizeRole("HR"), jobController.GetMyJobs)
+	jobRouter.GET("/:id", jobController.GetSingleJob)
 }
