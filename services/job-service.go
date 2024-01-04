@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"github.com/eliemugenzi/simply-hired/dto"
@@ -13,6 +14,7 @@ type JobService interface {
 	SaveJob(jobDto dto.Job, userId uint) (*gorm.DB, models.Job)
 	FindJobsByRecruiter(userId uint) (*gorm.DB, []models.Job)
 	GetSingleJob(jobId uint) (*gorm.DB, models.Job)
+	SubmitApplication(jobId uint, userId uint, applicationDto dto.Application) (*gorm.DB, models.Application)
 }
 
 type jobService struct {
@@ -56,4 +58,20 @@ func (service *jobService) GetSingleJob(jobId uint) (*gorm.DB, models.Job) {
 	result, job := service.jobRepo.GetSingleJob(jobId)
 
 	return result, job
+}
+
+func (service *jobService) SubmitApplication(jobId uint, userId uint, applicationDto dto.Application) (*gorm.DB, models.Application) {
+	fmt.Println(jobId, userId, applicationDto)
+
+	applicationData := models.Application{
+		Body: applicationDto.Body,
+		UserId: userId,
+		JobId: jobId,
+		Status: "SUBMITTED",
+	}
+
+	fmt.Println("Wallup" , applicationData)
+	result, application := service.jobRepo.SubmitApplication(applicationData)
+
+	return result, application
 }

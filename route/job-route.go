@@ -18,9 +18,15 @@ func JobRoute(db *gorm.DB, jobRouter *gin.RouterGroup, logger *logger.Logger) {
 		jobService service.JobService = service.NewJobService(jobRepository, authRepository)
 		jobController controller.JobController = controller.NewJobController(jobService, jwtService, logger)
 		roleMiddleware middleware.RoleMiddleware = middleware.NewRoleMiddleware(authRepository)
+		jobMiddleware middleware.JobMiddleware = middleware.NewJobMiddleware(jobRepository)
 	)
 
 	jobRouter.POST("/", roleMiddleware.AuthorizeRole("HR"), jobController.SaveJob)
 	jobRouter.GET("/myjobs", roleMiddleware.AuthorizeRole("HR"), jobController.GetMyJobs)
 	jobRouter.GET("/:id", jobController.GetSingleJob)
+	jobRouter.POST("/:id/applications",
+	 middleware.AuthorizeJWT(),
+	  roleMiddleware.AuthorizeRole("APPLICANT"),
+	   jobMiddleware.CheckJob(),
+	    jobController.SubmitApplication)
 }

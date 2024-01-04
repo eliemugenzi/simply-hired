@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -16,6 +17,7 @@ type JobController interface {
 	SaveJob(context *gin.Context)
 	GetMyJobs(context *gin.Context)
 	GetSingleJob(context *gin.Context)
+	SubmitApplication(context *gin.Context)
 }
 
 type jobController struct {
@@ -101,4 +103,35 @@ func (controller *jobController) GetSingleJob(context *gin.Context) {
 		),
 	)
 
+}
+
+func (controller *jobController) SubmitApplication(context *gin.Context) {
+	jobId, _ := context.Get("job_id")
+	userId, _ := context.Get("user_id")
+
+	application := dto.Application{}
+
+	if err := context.ShouldBindJSON(&application); err != nil {
+         context.JSON(
+			http.StatusBadRequest,
+			utils.GetResponse(http.StatusBadRequest, err.Error(), nil),
+		 )
+
+		 return
+	}
+
+	fmt.Println(jobId, userId)
+
+
+
+	_, applicationData := controller.jobService.SubmitApplication(jobId.(uint), userId.(uint), application)
+
+	context.JSON(
+		http.StatusCreated,
+		utils.GetResponse(
+			http.StatusCreated,
+			"Application has been submitted",
+			applicationData,
+		),
+	)
 }

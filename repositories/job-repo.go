@@ -9,6 +9,7 @@ type JobRepo interface {
 	SaveJob(job models.Job) (*gorm.DB, models.Job)
 	FindJobsByRecruiter(userId uint) (*gorm.DB, []models.Job)
 	GetSingleJob(jobId uint) (*gorm.DB, models.Job)
+	SubmitApplication(applicationData models.Application) (*gorm.DB, models.Application)
 }
 
 type jobRepo struct {
@@ -38,4 +39,10 @@ func (repo *jobRepo) GetSingleJob(jobId uint) (*gorm.DB, models.Job) {
 	job := models.Job{}
 	result := repo.db.Where("id = ?", jobId).First(&job)
 	return result, job
+}
+
+func (repo *jobRepo) SubmitApplication(application models.Application) (*gorm.DB, models.Application) {
+	applicationResult := repo.db.Create(&application)
+
+	return applicationResult, application
 }
