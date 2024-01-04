@@ -43,6 +43,19 @@ func (middleware *jobMiddleware) CheckJob() gin.HandlerFunc {
 			return
 		}
 
+		if job.Status != "OPEN" {
+			ctx.JSON(
+				http.StatusForbidden,
+				utils.GetResponse(
+					http.StatusForbidden,
+					"This job is no longer open for new applications",
+					nil,
+				),
+			)
+
+			return
+		}
+
 		ctx.Set("job_id", job.ID)
 	}
 }
