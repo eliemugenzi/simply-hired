@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type Repository struct {
@@ -16,6 +18,17 @@ type Repository struct {
 }
 
 func Configure() (*gorm.DB) {
+
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			LogLevel: logger.Silent,
+			IgnoreRecordNotFoundError: true,
+			ParameterizedQueries: true,
+			Colorful: true,
+		},
+	)
 	err := godotenv.Load()
 
 	if err != nil {
@@ -36,7 +49,9 @@ func Configure() (*gorm.DB) {
 				PreferSimpleProtocol: true,
 			},
 		),
-		&gorm.Config{},
+		&gorm.Config{
+			Logger: newLogger,
+		},
 	)
 
 	if err != nil {

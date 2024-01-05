@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/eliemugenzi/simply-hired/db/models"
 	"gorm.io/gorm"
 )
@@ -30,14 +32,15 @@ func (repo *jobRepo) SaveJob(job models.Job) (*gorm.DB, models.Job) {
 func (repo *jobRepo) FindJobsByRecruiter(userId uint) (*gorm.DB, []models.Job) {
 	jobs := []models.Job{}
 
-	result := repo.db.Where("user_id = ?", userId).Order("id desc").Find(&jobs).Preload("User")
+	result := repo.db.Where("user_id = ?", userId).Order("id desc").Preload("User").Find(&jobs).Preload("User")
 
 	return result, jobs
 }
 
 func (repo *jobRepo) GetSingleJob(jobId uint) (*gorm.DB, models.Job) {
 	job := models.Job{}
-	result := repo.db.Where("id = ?", jobId).First(&job)
+	result := repo.db.Where("id = ?", jobId).Preload("User").First(&job)
+	fmt.Println(job, job.ToString())
 	return result, job
 }
 

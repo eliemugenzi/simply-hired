@@ -1,8 +1,8 @@
 package models
 
 import (
+	"fmt"
 	"time"
-
 )
 
 type Job struct {
@@ -19,4 +19,9 @@ type Job struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	UserId uint `json:"user_id"`
 	User User `json:"user,omitempty" gorm:"foreignKey:UserId;references:ID"`
+}
+
+func (job *Job) ToString() string {
+    str := fmt.Sprintf("Job:\n[\n\nID: %v\nTitle: %v\nDescription: %v\n\n]", job.ID, job.Title, job.Description)
+	return str
 }
